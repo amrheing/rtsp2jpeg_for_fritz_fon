@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [0.1.0]: https://github.com/amrheing/rtsp2jpeg_for_fritz_fon/releases/tag/v0.1.0
 
-## [0.2.0] - Unreleased
+## [0.2.0] - 2025-08-18
 ### Added
 - Environment-configurable producer (PRODUCER_FPS, PRODUCER_JPEG_QUALITY, PRODUCER_SCALE_WIDTH, PRODUCER_TRANSPORT).
 - Prometheus metrics endpoint (`metrics.php`) with optional METRICS_TOKEN.
@@ -35,4 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Future
 - Consider multi-camera support and authentication enhancements.
+
+[0.2.0]: https://github.com/amrheing/rtsp2jpeg_for_fritz_fon/releases/tag/v0.2.0
 

@@ -36,5 +36,5 @@ echo 'webcam_frame_stale ' . (($age > $staleThreshold && $exists)?1:0) . "\n";
 
 echo "# HELP webcam_info Build info style static labels.\n";
 echo "# TYPE webcam_info gauge\n";
-$ver = '0.1.0';
+$ver = '0.2.0';
 echo 'webcam_info{version="' . $ver . '"} 1' . "\n";
