@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: PHP syntax lint
+        run: |
+          find . -type f -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Shell script lint
+        run: |
+          find . -type f -name "*.sh" -print0 | xargs -0 -n1 shellcheck
+
+      - name: Secret scan (basic)
+        run: |
+          ! grep -R "RTSP_PASS" -n . || (echo "RTSP_PASS literal found in repo" && exit 1)
+          ! grep -R "CHANGE_ME" -n . || (echo "CHANGE_ME placeholder left in code" && exit 1)
+
+      - name: Verify required files present
+        run: |
+          for f in README.md LICENSE .env.example frame_producer.sh webcam.php deploy/apache/webcam.conf.example deploy/systemd/webcam-frame.service.example; do
+            [ -f "$f" ] || (echo "Missing $f" && exit 1)
+          done
+
+      - name: Summary
+        run: echo "CI checks passed."

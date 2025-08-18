@@ -1,5 +1,7 @@
 # rtsp2jpeg_for_fritz_fon
 
+![CI](https://github.com/amrheing/rtsp2jpeg_for_fritz_fon/actions/workflows/ci.yml/badge.svg)
+
 Low-latency RTSP snapshot + MJPEG stream service optimized for AVM FritzFon handsets. Provides:
 
 - Fast snapshot endpoint with cached frame producer (1 FPS configurable)
@@ -78,10 +80,13 @@ If `STATUS_TOKEN` is unset, endpoint is public.
 Fast frame producer writes a scaled JPEG to `frame.jpg`. PHP applies slicing/scaling transforms when serving cache.
 
 ## License
-MIT (add LICENSE file if desired).
+MIT. See `LICENSE`.
 
 ## Contributing
-PRs welcome (create issues for feature requests or bug reports).
+See `CONTRIBUTING.md` for guidelines. PRs welcome (create issues for feature requests or bug reports).
+
+## Changelog
+See `CHANGELOG.md` for release history.
 
 ---
 Generated scaffold; adjust values before production use.
