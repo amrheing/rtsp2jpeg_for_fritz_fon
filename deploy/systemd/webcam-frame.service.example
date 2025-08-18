@@ -1,0 +1,21 @@
+[Unit]
+Description=Webcam continuous frame producer (example)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/webcam
+# Provide ENV via EnvironmentFile or explicit Environment= lines
+# EnvironmentFile=/etc/webcam/webcam.env
+ExecStart=/usr/bin/env bash /var/www/webcam/frame_producer.sh
+Restart=always
+RestartSec=3
+Nice=5
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6
+
+[Install]
+WantedBy=multi-user.target

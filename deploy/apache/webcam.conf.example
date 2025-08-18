@@ -1,0 +1,37 @@
+<VirtualHost *:80>
+    ServerName your.host.name
+    # ServerAlias other.host
+    DocumentRoot /var/www/webcam
+
+    # RTSP credentials passed to PHP (override .env)
+    SetEnv RTSP_USER streamer
+    SetEnv RTSP_PASS CHANGE_ME
+    SetEnv RTSP_HOST 192.0.2.10
+    SetEnv RTSP_PATH /Preview_05_sub
+
+    <Directory /var/www/webcam>
+        Options -Indexes -MultiViews +FollowSymLinks
+        AllowOverride None
+        Require all granted
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteRule ^(snapshot|image)\.jpg$ webcam.php?format=jpeg [L,QSA]
+            RewriteRule ^stream\.(mjpg|mjpeg)$ webcam.php?format=mjpeg [L,QSA]
+            RewriteRule ^fritz\.jpg$ webcam.php?format=jpeg [L,QSA]
+            RewriteRule ^status\.json$ status.php [L,QSA]
+        </IfModule>
+    </Directory>
+
+    <IfModule mod_headers.c>
+        Header unset X-Powered-By
+        Header set X-Content-Type-Options "nosniff"
+        Header set X-Frame-Options "SAMEORIGIN"
+        Header set X-XSS-Protection "1; mode=block"
+        Header set Cache-Control "no-store, no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </IfModule>
+
+    ErrorLog ${APACHE_LOG_DIR}/webcam_error.log
+    CustomLog ${APACHE_LOG_DIR}/webcam_access.log combined
+</VirtualHost>
