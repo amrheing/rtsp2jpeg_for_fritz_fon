@@ -1,6 +1,5 @@
 # rtsp2jpeg_for_fritz_fon
 
-![CI](https://github.com/amrheing/rtsp2jpeg_for_fritz_fon/actions/workflows/ci.yml/badge.svg)
 
 Low-latency RTSP snapshot + MJPEG stream service optimized for AVM FritzFon handsets. Provides:
 
