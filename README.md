@@ -59,6 +59,13 @@ status.php            # JSON status endpoint
 | RTSP_HOST | Camera host/IP | 172.25.10.218 |
 | RTSP_PATH | RTSP path | /Preview_05_sub |
 | STATUS_TOKEN | Auth token for `/status.json` | (none) |
+| METRICS_TOKEN | Auth token for `/metrics` | (none) |
+| PRODUCER_FPS | Producer frames per second | 1 |
+| PRODUCER_JPEG_QUALITY | Producer JPEG quality (2..31) | 7 |
+| PRODUCER_SCALE_WIDTH | Scale width for producer frame | 800 |
+| PRODUCER_TRANSPORT | Initial RTSP transport (tcp/udp) | tcp |
+| FRAME_STALE_THRESHOLD | Age threshold seconds for stale metric | 10 |
+| WATCHDOG_MAX_AGE | Max acceptable frame age for watchdog | 15 |
 
 Additional tuning inside `webcam.php` config array: slicing defaults, Fritz settings, cache ages.
 
@@ -70,6 +77,20 @@ Additional tuning inside `webcam.php` config array: slicing defaults, Fritz sett
 ## Status Endpoint
 `/status.json?token=STATUS_TOKEN` returns JSON with frame age/size and selected env (no password exposure).
 If `STATUS_TOKEN` is unset, endpoint is public.
+
+## Metrics Endpoint
+`/metrics?token=METRICS_TOKEN` exposes Prometheus metrics (frame age, size, existence, stale flag, build info). Protect with `METRICS_TOKEN` when exposed.
+
+## Watchdog
+Example systemd `webcam-watchdog.service/.timer` in `deploy/systemd` restarts the producer if the cached frame is older than `WATCHDOG_MAX_AGE` seconds.
+
+## Docker
+Basic `Dockerfile` and `docker-compose.example.yml` provided. Run:
+```
+docker build -t rtsp2jpeg .
+docker run --rm -e RTSP_USER=streamer -e RTSP_PASS=secret -p 8080:8080 rtsp2jpeg
+```
+Then browse `http://localhost:8080/fritz.jpg`.
 
 ## Security Notes
 - Do NOT commit `.env`.

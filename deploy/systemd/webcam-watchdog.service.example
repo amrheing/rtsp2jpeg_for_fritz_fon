@@ -1,0 +1,15 @@
+[Unit]
+Description=Webcam Frame Watchdog
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/var/www/webcam/watchdog.sh
+User=www-data
+Group=www-data
+Environment=WATCHDOG_MAX_AGE=15
+Environment=WATCHDOG_SERVICE=webcam-frame.service
+WorkingDirectory=/var/www/webcam
+
+[Install]
+WantedBy=multi-user.target

@@ -4,13 +4,18 @@
 # Adjust FPS, quality, filters or crop here; main PHP will still apply slice/crop if needed.
 
 set -u
-URL="rtsp://streamer:Scotti.01@172.25.10.218/Preview_05_sub"
-OUT="/var/www/webcam/frame.jpg"
-LOG_DIR="/var/log/webcam"
+RTSP_USER="${RTSP_USER:-streamer}"
+RTSP_PASS="${RTSP_PASS:-CHANGE_ME}"
+RTSP_HOST="${RTSP_HOST:-172.25.10.218}"
+RTSP_PATH="${RTSP_PATH:-/Preview_05_sub}"
+URL="rtsp://${RTSP_USER}:${RTSP_PASS}@${RTSP_HOST}${RTSP_PATH}"
+
+OUT="${FRAME_OUTPUT:-/var/www/webcam/frame.jpg}"
+LOG_DIR="${FRAME_LOG_DIR:-/var/log/webcam}"
 LOG="$LOG_DIR/frame_producer.log"
-FPS="1"            # frames per second to extract
-QUALITY="7"        # ffmpeg -q:v value (2=better,bigger; higher=smaller)
-TRANSPORT="tcp"    # preferred initial transport (tcp or udp or empty for auto)
+FPS="${PRODUCER_FPS:-1}"            # frames per second to extract
+QUALITY="${PRODUCER_JPEG_QUALITY:-7}"        # ffmpeg -q:v value (2=better,bigger; higher=smaller)
+TRANSPORT="${PRODUCER_TRANSPORT:-tcp}"    # preferred initial transport (tcp or udp or empty for auto)
 
 # Hardware decode disabled (permissions/device not ready). Enable later if needed.
 HW_DEC=""
@@ -53,7 +58,8 @@ while true; do
     CMD+=( -rtsp_transport "$TRANSPORT" )
   fi
   # Scale to width 800 (maintain aspect, enforce even dimensions) then output one JPEG
-  CMD+=( $HW_DEC -i "$URL" -frames:v 1 -vf "scale=800:-2" -q:v "$QUALITY" -f image2 "$TMP_OUT" )
+  SCALE_WIDTH="${PRODUCER_SCALE_WIDTH:-800}"
+  CMD+=( $HW_DEC -i "$URL" -frames:v 1 -vf "scale=${SCALE_WIDTH}:-2" -q:v "$QUALITY" -f image2 "$TMP_OUT" )
   log "[frame_producer] running: ${CMD[*]}"
   # Execute
   "${CMD[@]}" 2>>"$LOG" || {

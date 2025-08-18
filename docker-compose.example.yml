@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  webcam:
+    build: .
+    container_name: rtsp2jpeg
+    environment:
+      RTSP_USER: streamer
+      RTSP_PASS: ${RTSP_PASS}
+      RTSP_HOST: 172.25.10.218
+      RTSP_PATH: /Preview_05_sub
+      PRODUCER_FPS: 1
+      PRODUCER_JPEG_QUALITY: 7
+      PRODUCER_SCALE_WIDTH: 640
+      STATUS_TOKEN: changeme_status
+      METRICS_TOKEN: changeme_metrics
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    # volumes: mount a persistent directory if desired
+    # volumes:
+    #   - ./data:/app

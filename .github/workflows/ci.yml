@@ -23,6 +23,9 @@ jobs:
       - name: PHP syntax lint
         run: |
           find . -type f -name "*.php" -print0 | xargs -0 -n1 php -l
+      - name: Run slice tests
+        run: |
+          if [ -f tests/test_slicing.php ]; then php tests/test_slicing.php; fi
 
       - name: Install ShellCheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
@@ -44,3 +47,10 @@ jobs:
 
       - name: Summary
         run: echo "CI checks passed."
+      - name: Install gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_$(uname -s)_$(uname -m).tar.gz -o /tmp/gitleaks.tgz || exit 0
+          tar -xzf /tmp/gitleaks.tgz -C /usr/local/bin gitleaks || true
+      - name: gitleaks scan
+        run: |
+          if command -v gitleaks >/dev/null 2>&1; then gitleaks detect --no-git -v || true; fi
