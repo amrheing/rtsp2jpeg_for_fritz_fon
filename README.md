@@ -79,6 +79,19 @@ If `STATUS_TOKEN` is unset, endpoint is public.
 ## Development
 Fast frame producer writes a scaled JPEG to `frame.jpg`. PHP applies slicing/scaling transforms when serving cache.
 
+## FritzFon Integration
+See `docs/FritzFon.md` for handset configuration, performance tuning, and troubleshooting tips specific to AVM FritzFon devices.
+
+## Troubleshooting
+| Issue | Cause | Remedy |
+|-------|-------|--------|
+| Slow first image | Producer cold start | Wait for first frame (~1s) then subsequent requests are instant. |
+| Stale image | Producer stopped | `systemctl restart webcam-frame.service`; check logs `journalctl -u webcam-frame.service`. |
+| High CPU usage | Too large scale or high FPS | Reduce output width or adjust producer sleep/FPS. |
+| Blank on FritzFon | Cached error / wrong URL | Re-open Live Image; verify `/fritz.jpg` loads in browser. |
+| 403/404 errors | Rewrite or vhost misconfig | Confirm Apache mods enabled and vhost active. |
+| Secrets in repo warning (CI) | Placeholder left | Remove secret or replace with env var; update `.env`. |
+
 ## License
 MIT. See `LICENSE`.
 
