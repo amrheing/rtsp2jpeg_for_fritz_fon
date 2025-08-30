@@ -4,6 +4,9 @@
 // update für nvr
 //
 // rtsp://stramer:Scotti.01@172.25.10.218/Preview_05_sub
+// Reolink NVR: Preview_XX_main and _sub. XX is the camera channel
+// Reolink Camera: Preview_01_main and _sub
+// 
 // ****
 
 // Optional .env loader (simple parser: KEY=VALUE lines, ignores comments)
@@ -35,22 +38,22 @@ $config = [
     'rtsp_path' => getenv('RTSP_PATH') ?: '/Preview_05_sub', // include leading slash
     // Default vertical slice for plain /snapshot.jpg or /image.jpg (format=jpeg) when
     // no &slice= or &crop= provided. Format: parts:from-to (e.g. 5:3-4). Set to '' to disable.
-    'default_snapshot_slice' => '5:3-4',
+    'default_snapshot_slice' => getenv('DEFAULT_SNAPSHOT_SLICE') ?: '5:3-4',
     // FritzFon compatibility mode settings
-    'fritz_enable' => true,               // master switch
-    'fritz_user_agent_substr' => 'AVM',   // substring to detect in UA; or use ?fritz=1
-    'fritz_max_width' => 640,             // scale down to at most this width
-    'fritz_jpeg_quality' => 8,            // slightly higher number = lower quality (smaller size); 2..31
-    'fritz_cache_ttl' => 3,               // seconds to reuse last snapshot for Fritz requests
-    'fritz_cache_dir' => sys_get_temp_dir(), // directory for cached snapshot
-    'fritz_default_slice' => '5:3-4',      // default slice for /fritz.jpg if none specified
+    'fritz_enable' => filter_var(getenv('FRITZ_ENABLE') ?: 'true', FILTER_VALIDATE_BOOLEAN),
+    'fritz_user_agent_substr' => getenv('FRITZ_USER_AGENT') ?: 'AVM',   // substring to detect in UA; or use ?fritz=1
+    'fritz_max_width' => (int)(getenv('FRITZ_MAX_WIDTH') ?: 640),             // scale down to at most this width
+    'fritz_jpeg_quality' => (int)(getenv('FRITZ_JPEG_QUALITY') ?: 8),            // slightly higher number = lower quality (smaller size); 2..31
+    'fritz_cache_ttl' => (int)(getenv('FRITZ_CACHE_TTL') ?: 3),               // seconds to reuse last snapshot for Fritz requests
+    'fritz_cache_dir' => getenv('FRITZ_CACHE_DIR') ?: sys_get_temp_dir(), // directory for cached snapshot
+    'fritz_default_slice' => getenv('FRITZ_DEFAULT_SLICE') ?: '5:3-4',      // default slice for /fritz.jpg if none specified
     // --- Performance / latency tuning ---
-    'fast_mode' => true,                  // if true, use shorter timeouts and fewer attempts for snapshot
-    'fast_frame_cache' => '/var/www/webcam/frame.jpg', // if file exists & is fresh, serve instead of ffmpeg
-    'fast_frame_max_age' => 2,            // seconds; 0 disables cache usage
-    'hwaccel' => 'rpi',                   // placeholder flag to append hw acceleration options (rpi|none)
-    'fast_fallback' => true,              // after fast attempts fail, run full attempt list
-    'public_base_url' => 'http://192.168.1.52', // base URL reachable from Fritz VLAN (no trailing slash)
+    'fast_mode' => filter_var(getenv('FAST_MODE') ?: 'true', FILTER_VALIDATE_BOOLEAN),
+    'fast_frame_cache' => getenv('FAST_FRAME_CACHE') ?: '/var/www/webcam/frame.jpg', // if file exists & is fresh, serve instead of ffmpeg
+    'fast_frame_max_age' => (int)(getenv('FAST_FRAME_MAX_AGE') ?: 2),            // seconds; 0 disables cache usage
+    'hwaccel' => getenv('HWACCEL') ?: 'none',                  // placeholder flag to append hw acceleration options (rpi|none)
+    'fast_fallback' => filter_var(getenv('FAST_FALLBACK') ?: 'true', FILTER_VALIDATE_BOOLEAN),
+    'public_base_url' => getenv('PUBLIC_BASE_URL') ?: 'http://192.168.1.52', // base URL reachable from Fritz VLAN (no trailing slash)
 ];
 // Build URL from config
 $rtspUrl = sprintf(
