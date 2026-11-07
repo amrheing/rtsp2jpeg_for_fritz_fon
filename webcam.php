@@ -3,7 +3,7 @@
 // ***
 // update für nvr
 //
-// rtsp://stramer:Scotti.01@172.25.10.218/Preview_05_sub
+// rtsp://<user>:<password>@<nvr-host>/Preview_05_sub
 // Reolink NVR: Preview_XX_main and _sub. XX is the camera channel
 // Reolink Camera: Preview_01_main and _sub
 // 
